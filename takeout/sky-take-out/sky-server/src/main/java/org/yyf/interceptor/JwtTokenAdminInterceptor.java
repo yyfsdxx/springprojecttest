@@ -1,8 +1,9 @@
 package org.yyf.interceptor;
 
-import com.sky.constant.JwtClaimsConstant;
-import com.sky.properties.JwtProperties;
-import com.sky.utils.JwtUtil;
+import org.yyf.constant.JwtClaimsConstant;
+import org.yyf.context.BaseContext;
+import org.yyf.properties.JwtProperties;
+import org.yyf.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +48,20 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
             log.info("当前员工id：", empId);
+            BaseContext.setCurrentId(empId);
             //3、通过，放行
             return true;
         } catch (Exception ex) {
+            log.info("校验失败");
             //4、不通过，响应401状态码
             response.setStatus(401);
             return false;
         }
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+       log.info("Thread释放");
+        BaseContext.removeCurrentId();
     }
 }

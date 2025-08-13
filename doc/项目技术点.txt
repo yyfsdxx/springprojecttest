@@ -1,0 +1,5 @@
+1.md5加密digestUtils.md5
+2.result结果统一封装
+3.swaggar以及yapi的使用
+4.1 dto对象拷贝至实体对象(数据映射) ：beanUtils.copyproperties(dtoobject,object);
+4.2 用ThreadLocal来解决当前用户id（线程专属存储），属于多线程方法，也可以用session进行传输。
